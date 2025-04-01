@@ -1,0 +1,1841 @@
+swagger: '2.0'
+info:
+  description: Api Documentation
+  version: '1.0'
+  title: Api Documentation
+  termsOfService: urn:tos
+  contact: {}
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0
+host: 127.0.0.1:4443
+basePath: /
+tags:
+  - name: basic-error-controller
+    description: Basic Error Controller
+  - name: j-controller
+    description: J Controller
+  - name: jihuawai-controller
+    description: Jihuawai Controller
+  - name: project-manage-controller
+    description: Project Manage Controller
+  - name: test-2-controller
+    description: Test 2 Controller
+  - name: test-3-controller
+    description: Test 3 Controller
+  - name: test-controller
+    description: Test Controller
+paths:
+  /api/project/manage/create/group:
+    post:
+      tags:
+        - project-manage-controller
+      summary: createGroup
+      operationId: createGroupUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: group
+          description: group
+          required: true
+          schema:
+            $ref: '#/definitions/Group111'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/project/manage/create/group1:
+    post:
+      tags:
+        - project-manage-controller
+      summary: createGroup1
+      operationId: createGroup1UsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: group
+          description: group
+          required: true
+          schema:
+            $ref: '#/definitions/Group111'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /api/project/manage/select/allGroups:
+    get:
+      tags:
+        - project-manage-controller
+      summary: getAllGroupList
+      operationId: getAllGroupListUsingGET
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Group111'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /error:
+    get:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingGET
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    head:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingHEAD
+      consumes:
+        - application/json
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    post:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingPUT
+      consumes:
+        - application/json
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingDELETE
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    options:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingOPTIONS
+      consumes:
+        - application/json
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    patch:
+      tags:
+        - basic-error-controller
+      summary: errorHtml
+      operationId: errorHtmlUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - text/html
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/ModelAndView'
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /jacoco/addTest1:
+    get:
+      tags:
+        - test-controller
+      summary: addTest1
+      operationId: addTest1UsingGET_4
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/addTest2:
+    get:
+      tags:
+        - test-controller
+      summary: addTest2
+      operationId: addTest2UsingGET_4
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/addTest3:
+    get:
+      tags:
+        - test-controller
+      summary: addTest3
+      operationId: addTest3UsingGET_2
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/addTest4:
+    get:
+      tags:
+        - test-controller
+      summary: addTest4
+      operationId: addTest4UsingGET_2
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/addTest5:
+    get:
+      tags:
+        - test-controller
+      summary: addTest5
+      operationId: addTest5UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/getTest:
+    get:
+      tags:
+        - test-controller
+      summary: getTest
+      operationId: getTestUsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/getTest1:
+    get:
+      tags:
+        - test-controller
+      summary: getTest1
+      operationId: getTest1UsingGET_4
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/getTest2:
+    get:
+      tags:
+        - test-controller
+      summary: getTest2
+      operationId: getTest2UsingGET_4
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/getTest33:
+    get:
+      tags:
+        - test-controller
+      summary: getTest33
+      operationId: getTest33UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/getTest4:
+    get:
+      tags:
+        - test-controller
+      summary: getTest4
+      operationId: getTest4UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/getTest5:
+    get:
+      tags:
+        - test-controller
+      summary: getTest5
+      operationId: getTest5UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco/test33:
+    post:
+      tags:
+        - test-controller
+      summary: computeFeature
+      operationId: computeFeatureUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: address
+          in: query
+          required: false
+          type: string
+        - name: num
+          in: query
+          required: false
+          type: integer
+          format: int32
+        - name: password
+          in: query
+          required: false
+          type: string
+        - name: username
+          in: query
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/addTest1:
+    get:
+      tags:
+        - test-2-controller
+      summary: addTest1
+      operationId: addTest1UsingGET_2
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/addTest2:
+    get:
+      tags:
+        - test-2-controller
+      summary: addTest2
+      operationId: addTest2UsingGET_2
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/addTest3:
+    get:
+      tags:
+        - test-2-controller
+      summary: addTest3
+      operationId: addTest3UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/addTest4:
+    get:
+      tags:
+        - test-2-controller
+      summary: addTest4
+      operationId: addTest4UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/getTest1:
+    get:
+      tags:
+        - test-2-controller
+      summary: getTest1
+      operationId: getTest1UsingGET_2
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/getTest2:
+    get:
+      tags:
+        - test-2-controller
+      summary: getTest2
+      operationId: getTest2UsingGET_2
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/getTest3:
+    get:
+      tags:
+        - test-2-controller
+      summary: getTest3
+      operationId: getTest3UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/newTest1:
+    get:
+      tags:
+        - test-2-controller
+      summary: newTest1
+      operationId: newTest1UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco2/newTest2:
+    get:
+      tags:
+        - test-2-controller
+      summary: newTest2
+      operationId: newTest2UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/addTest1:
+    get:
+      tags:
+        - test-3-controller
+      summary: addTest1
+      operationId: addTest1UsingGET_3
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/addTest2:
+    get:
+      tags:
+        - test-3-controller
+      summary: addTest2
+      operationId: addTest2UsingGET_3
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/addTest3:
+    get:
+      tags:
+        - test-3-controller
+      summary: addTest3
+      operationId: addTest3UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/addTest4:
+    get:
+      tags:
+        - test-3-controller
+      summary: addTest4
+      operationId: addTest4UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/getTest1:
+    get:
+      tags:
+        - test-3-controller
+      summary: getTest1
+      operationId: getTest1UsingGET_3
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/getTest2:
+    get:
+      tags:
+        - test-3-controller
+      summary: getTest2
+      operationId: getTest2UsingGET_3
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/getTest3:
+    get:
+      tags:
+        - test-3-controller
+      summary: getTest3
+      operationId: getTest3UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/getTest4:
+    get:
+      tags:
+        - test-3-controller
+      summary: getTest4
+      operationId: getTest4UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/newTest1:
+    get:
+      tags:
+        - test-3-controller
+      summary: newTest1
+      operationId: newTest1UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/newTest111:
+    get:
+      tags:
+        - test-3-controller
+      summary: newTest111
+      operationId: newTest111UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jacoco3/newTest2:
+    get:
+      tags:
+        - test-3-controller
+      summary: newTest2
+      operationId: newTest2UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai1:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: addTest1
+      operationId: addTest1UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai2:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: addTest2
+      operationId: addTest2UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai3:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: getTest1
+      operationId: getTest1UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai4:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: getTest2
+      operationId: getTest2UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai5:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: getTest5
+      operationId: getTest5UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai6:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: getTest6
+      operationId: getTest6UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai/jihuawai7:
+    get:
+      tags:
+        - jihuawai-controller
+      summary: getTest7
+      operationId: getTest7UsingGET_1
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/get111:
+    get:
+      tags:
+        - j-controller
+      summary: getTest111
+      operationId: getTest111UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/get222:
+    get:
+      tags:
+        - j-controller
+      summary: getTest222
+      operationId: getTest222UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/ji1:
+    get:
+      tags:
+        - j-controller
+      summary: jiTest1
+      operationId: jiTest1UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/ji2:
+    get:
+      tags:
+        - j-controller
+      summary: jiTest2
+      operationId: jiTest2UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/jihuawai1:
+    get:
+      tags:
+        - j-controller
+      summary: addTest1
+      operationId: addTest1UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/jihuawai2:
+    get:
+      tags:
+        - j-controller
+      summary: addTest2
+      operationId: addTest2UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/jihuawai3:
+    get:
+      tags:
+        - j-controller
+      summary: getTest1
+      operationId: getTest1UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/jihuawai4:
+    get:
+      tags:
+        - j-controller
+      summary: getTest2
+      operationId: getTest2UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/test/jihuawai3:
+    get:
+      tags:
+        - j-controller
+      summary: getTest7
+      operationId: getTest7UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /jihuawai2/test1/jihuawai3:
+    get:
+      tags:
+        - j-controller
+      summary: getTest8
+      operationId: getTest8UsingGET
+      produces:
+        - '*/*'
+      parameters:
+        - name: password
+          in: query
+          description: password
+          required: false
+          type: string
+        - name: userName
+          in: query
+          description: userName
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+definitions:
+  Group111:
+    type: object
+    properties:
+      groupName:
+        type: string
+      groupShortform:
+        type: string
+      id:
+        type: integer
+        format: int32
+      num:
+        type: integer
+        format: int32
+    title: Group111
+  ModelAndView:
+    type: object
+    properties:
+      empty:
+        type: boolean
+      model:
+        type: object
+      modelMap:
+        type: object
+        additionalProperties:
+          type: object
+      reference:
+        type: boolean
+      status:
+        type: string
+        enum:
+          - ACCEPTED
+          - ALREADY_REPORTED
+          - BAD_GATEWAY
+          - BAD_REQUEST
+          - BANDWIDTH_LIMIT_EXCEEDED
+          - CHECKPOINT
+          - CONFLICT
+          - CONTINUE
+          - CREATED
+          - DESTINATION_LOCKED
+          - EXPECTATION_FAILED
+          - FAILED_DEPENDENCY
+          - FORBIDDEN
+          - FOUND
+          - GATEWAY_TIMEOUT
+          - GONE
+          - HTTP_VERSION_NOT_SUPPORTED
+          - IM_USED
+          - INSUFFICIENT_SPACE_ON_RESOURCE
+          - INSUFFICIENT_STORAGE
+          - INTERNAL_SERVER_ERROR
+          - I_AM_A_TEAPOT
+          - LENGTH_REQUIRED
+          - LOCKED
+          - LOOP_DETECTED
+          - METHOD_FAILURE
+          - METHOD_NOT_ALLOWED
+          - MOVED_PERMANENTLY
+          - MOVED_TEMPORARILY
+          - MULTIPLE_CHOICES
+          - MULTI_STATUS
+          - NETWORK_AUTHENTICATION_REQUIRED
+          - NON_AUTHORITATIVE_INFORMATION
+          - NOT_ACCEPTABLE
+          - NOT_EXTENDED
+          - NOT_FOUND
+          - NOT_IMPLEMENTED
+          - NOT_MODIFIED
+          - NO_CONTENT
+          - OK
+          - PARTIAL_CONTENT
+          - PAYLOAD_TOO_LARGE
+          - PAYMENT_REQUIRED
+          - PERMANENT_REDIRECT
+          - PRECONDITION_FAILED
+          - PRECONDITION_REQUIRED
+          - PROCESSING
+          - PROXY_AUTHENTICATION_REQUIRED
+          - REQUESTED_RANGE_NOT_SATISFIABLE
+          - REQUEST_ENTITY_TOO_LARGE
+          - REQUEST_HEADER_FIELDS_TOO_LARGE
+          - REQUEST_TIMEOUT
+          - REQUEST_URI_TOO_LONG
+          - RESET_CONTENT
+          - SEE_OTHER
+          - SERVICE_UNAVAILABLE
+          - SWITCHING_PROTOCOLS
+          - TEMPORARY_REDIRECT
+          - TOO_EARLY
+          - TOO_MANY_REQUESTS
+          - UNAUTHORIZED
+          - UNAVAILABLE_FOR_LEGAL_REASONS
+          - UNPROCESSABLE_ENTITY
+          - UNSUPPORTED_MEDIA_TYPE
+          - UPGRADE_REQUIRED
+          - URI_TOO_LONG
+          - USE_PROXY
+          - VARIANT_ALSO_NEGOTIATES
+      view:
+        $ref: '#/definitions/View'
+      viewName:
+        type: string
+    title: ModelAndView
+  View:
+    type: object
+    properties:
+      contentType:
+        type: string
+    title: View

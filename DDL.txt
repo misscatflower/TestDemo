@@ -1,0 +1,811 @@
+-- accurate_test.call_chain_relationship definition
+
+CREATE TABLE `call_chain_relationship` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '表id',
+  `version_id` int(11) DEFAULT NULL COMMENT '版本id',
+  `parent_id` int(11) DEFAULT NULL COMMENT '调用父id',
+  `method_name` varchar(100) NOT NULL COMMENT '方法名称',
+  `method_path` varchar(500) NOT NULL COMMENT '方法全路径',
+  `create_time` datetime DEFAULT NULL COMMENT '新增时间',
+  `dynamic_flag` varchar(100) DEFAULT '0' COMMENT '动态合并标识',
+  `change_flag` varchar(1) DEFAULT '0' COMMENT '变更方法标识',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_versionid` (`version_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_parentid` (`parent_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 24911 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '静态调用链表';
+
+
+-- accurate_test.call_chain_sandbox definition
+
+CREATE TABLE `call_chain_sandbox` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_name` varchar(100) DEFAULT NULL COMMENT '方法名称',
+  `class_name` varchar(100) DEFAULT NULL COMMENT '类名称',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `top_call_info` varchar(1000) DEFAULT NULL COMMENT '调用关系',
+  `executor_time` bigint(20) DEFAULT NULL COMMENT '执行时间(存放微秒值)',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `parameter_array` text DEFAULT NULL COMMENT '方法入参',
+  `return_obj` text DEFAULT NULL COMMENT '方法出参',
+  `service_name` varchar(100) DEFAULT NULL COMMENT '服务名称',
+  `env` varchar(100) DEFAULT NULL COMMENT '服务环境',
+  `throwable` text DEFAULT NULL COMMENT '方法异常',
+  `version_no` varchar(100) DEFAULT NULL COMMENT '版本号',
+  `trace_id` varchar(100) DEFAULT NULL COMMENT '请求唯一id',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父id',
+  `branch_id` int(11) DEFAULT NULL COMMENT '所属分支id',
+  `call_line_num` int(11) DEFAULT NULL COMMENT '被调行号',
+  `link_status` int(11) DEFAULT '0' COMMENT '链路状态 0 正常 1 异常',
+  `sys_intro` varchar(255) DEFAULT NULL COMMENT '系统名称',
+  `is_external_call` varchar(255) DEFAULT '1' COMMENT '是否为微服务调用接口',
+  `server_address` varchar(255) DEFAULT NULL COMMENT '服务ip及端口',
+  UNIQUE KEY `unique_call_chain` (`trace_id`, `parent_id`, `call_line_num`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_parentid` (`parent_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_trace_id` (`trace_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 780187 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '动态调用链表';
+
+
+-- accurate_test.case_execute_info definition
+
+CREATE TABLE `case_execute_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `version_no` int(11) DEFAULT NULL COMMENT '对应的版本',
+  `case_uuid` varchar(100) NOT NULL COMMENT '用例uuid',
+  `executor` varchar(100) DEFAULT NULL COMMENT '用例执行人',
+  `source` varchar(100) DEFAULT NULL COMMENT '用例来源',
+  `execute_time` timestamp NULL DEFAULT NULL COMMENT '用例执行时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '结束执行时间',
+  `insert_time` timestamp NOT NULL COMMENT '插入时间',
+  `execute_status` int(11) DEFAULT '0' COMMENT '用例是否执行成功：0成功，1失败',
+  `case_id` int(11) DEFAULT NULL COMMENT '用例表id',
+  `executor_name` varchar(100) NOT NULL COMMENT '执行人工号',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_case_uuid` (`case_uuid`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 34 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '用例执行记录表';
+
+
+-- accurate_test.case_recommended definition
+
+CREATE TABLE `case_recommended` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_sign` varchar(500) DEFAULT NULL COMMENT '方法签名',
+  `mapping_url` varchar(500) DEFAULT NULL COMMENT 'url映射',
+  `mapping_method` varchar(255) DEFAULT NULL COMMENT '映射方法',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '旧版本',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '新版本',
+  `insert_time` datetime DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 391 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '用例推荐表';
+
+
+-- accurate_test.code_diff_branch_info definition
+
+CREATE TABLE `code_diff_branch_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL COMMENT '方法id',
+  `branch_type` varchar(100) DEFAULT NULL COMMENT '分支类型',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '新版本号',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '旧版本号',
+  `branch_line` int(11) DEFAULT NULL COMMENT '分支所在行号',
+  `execute_num` int(11) NOT NULL DEFAULT '0' COMMENT '执行次数',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `parent_branch_line` int(11) DEFAULT NULL COMMENT '父分支所在行号',
+  `relevance_branch_line` int(11) DEFAULT NULL COMMENT '关联分支所在行号',
+  `branch_end_line` int(11) DEFAULT NULL COMMENT '分支结束行',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_parentid` (`parent_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_newversionid` (`new_version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_oldversionid` (`old_version_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 3621 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '差异类分支详情表';
+
+
+-- accurate_test.code_diff_info definition
+
+CREATE TABLE `code_diff_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `module_name` varchar(255) DEFAULT NULL COMMENT '模块名称',
+  `type` varchar(255) DEFAULT NULL COMMENT '差异类型',
+  `class_path` varchar(255) DEFAULT NULL COMMENT '类路径',
+  `createtime` datetime DEFAULT NULL COMMENT '创建时间',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '旧版本',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '新版本',
+  `change_code_num` int(11) DEFAULT NULL COMMENT '差异代码行',
+  `package_name` varchar(200) DEFAULT NULL COMMENT '包名',
+  `branch_count` int(11) DEFAULT '0' COMMENT '分支数',
+  `valid_code_num` int(11) DEFAULT '0' COMMENT '有效代码行数',
+  `execute_num` int(11) DEFAULT '0' COMMENT '执行次数',
+  `methods_num` int(11) DEFAULT '0' COMMENT '差异方法数',
+  `class_type` varchar(1) DEFAULT '1' COMMENT '类类型',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_oldversionId` (`old_version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_newversionId` (`new_version_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 926 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '差异类表';
+
+
+-- accurate_test.code_diff_linesinfo definition
+
+CREATE TABLE `code_diff_linesinfo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` varchar(255) DEFAULT NULL COMMENT '变更类型',
+  `endLineNum` int(11) DEFAULT NULL COMMENT '变更开始行',
+  `startLineNum` int(11) DEFAULT NULL COMMENT '变更结束行',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父id',
+  `createtime` datetime NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_parentid` (`parent_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 3321 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '差异类变更行表';
+
+
+-- accurate_test.code_diff_methodinfo definition
+
+CREATE TABLE `code_diff_methodinfo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `endLine` int(11) DEFAULT NULL COMMENT '方法起始行',
+  `startLine` int(11) DEFAULT NULL COMMENT '方法结束行',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `parameters` varchar(255) DEFAULT NULL COMMENT '方法入参',
+  `parent_id` int(11) DEFAULT NULL COMMENT '父id',
+  `createtime` datetime DEFAULT NULL COMMENT '创建时间',
+  `controller` varchar(100) DEFAULT NULL COMMENT '方法所属controller',
+  `execute_num` int(11) DEFAULT '0' COMMENT '方法是否执行',
+  `branch_count` int(11) DEFAULT '0' COMMENT '方法分支数量',
+  `valid_code_num` int(11) DEFAULT '0' COMMENT '有效代码行数',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '旧版本',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '新版本',
+  `method_sign` varchar(255) DEFAULT NULL COMMENT '方法签名',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_parentid` (`parent_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 2686 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '差异类方法表';
+
+
+-- accurate_test.code_diff_overview definition
+
+CREATE TABLE `code_diff_overview` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '差异信息概况id',
+  `sys_no` int(11) NOT NULL COMMENT '版本所属系统，对应system的id',
+  `oldversionId` int(11) NOT NULL COMMENT '差异对比旧版本id',
+  `newversionId` int(11) NOT NULL COMMENT '差异版本对比新版本id',
+  `diff_num` int(11) DEFAULT NULL COMMENT '差异数量',
+  `insert_time` timestamp NOT NULL COMMENT '插入时间',
+  `status` int(11) DEFAULT '0' COMMENT '差异状态，用于增量更新，默认为0无效，1有效',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 137 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '差异分析数据概况表';
+
+
+-- accurate_test.code_diff_valid_code_lines definition
+
+CREATE TABLE `code_diff_valid_code_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_id` int(11) DEFAULT NULL COMMENT '方法表id',
+  `line_number` int(11) DEFAULT NULL COMMENT '代码行号',
+  `execute_num` int(11) DEFAULT '0' COMMENT '执行次数',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '新版本号',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '旧版本号',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 12247 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '方法有效代码行表';
+
+
+-- accurate_test.executor_code_line_info definition
+
+CREATE TABLE `executor_code_line_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `server_no` varchar(255) DEFAULT NULL,
+  `server_name` varchar(255) DEFAULT NULL,
+  `server_address` varchar(255) DEFAULT NULL COMMENT '服务ip及端口',
+  `env` varchar(255) DEFAULT NULL,
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `line_num` int(11) DEFAULT NULL COMMENT '代码行号',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本编号',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `trace_id` varchar(255) DEFAULT NULL COMMENT '思考ywalking追踪id',
+  `status` varchar(1) DEFAULT NULL COMMENT '是否处理 0 未处理,1 处理',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_cover_line_info` (`version_no`, `case_uuid`, `class_name`, `line_num`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_sysid` (`sys_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 12625145 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '覆盖代码行记录表';
+
+
+-- accurate_test.executor_code_line_info_002 definition
+
+CREATE TABLE `executor_code_line_info_002` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `server_no` varchar(255) DEFAULT NULL,
+  `server_name` varchar(255) DEFAULT NULL,
+  `server_address` varchar(255) DEFAULT NULL COMMENT '服务ip及端口',
+  `env` varchar(255) DEFAULT NULL,
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `line_num` int(11) DEFAULT NULL COMMENT '代码行号',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本编号',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `trace_id` varchar(255) DEFAULT NULL COMMENT '思考ywalking追踪id',
+  `status` varchar(1) DEFAULT NULL COMMENT '是否处理 0 未处理,1 处理',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_sysid` (`sys_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 10744043 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '覆盖代码行记录表';
+
+
+-- accurate_test.executor_code_line_info_003 definition
+
+CREATE TABLE `executor_code_line_info_003` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `server_no` varchar(255) DEFAULT NULL,
+  `server_name` varchar(255) DEFAULT NULL,
+  `server_address` varchar(255) DEFAULT NULL COMMENT '服务ip及端口',
+  `env` varchar(255) DEFAULT NULL,
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `line_num` int(11) DEFAULT NULL COMMENT '代码行号',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本编号',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `trace_id` varchar(255) DEFAULT NULL COMMENT '思考ywalking追踪id',
+  `status` varchar(1) DEFAULT NULL COMMENT '是否处理 0 未处理,1 处理',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_cover_line_info` (`case_uuid`, `trace_id`, `class_name`, `line_num`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_sysid` (`sys_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 16157772 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '覆盖代码行记录表';
+
+
+-- accurate_test.executor_cover_info definition
+
+CREATE TABLE `executor_cover_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `line_num` int(11) DEFAULT NULL COMMENT '代码行号',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本编号',
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `case_source` varchar(255) DEFAULT NULL COMMENT '用例来源',
+  `executor` varchar(255) DEFAULT NULL COMMENT '执行人',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `case_id` int(11) DEFAULT NULL COMMENT '用例id',
+  `server_address` varchar(255) DEFAULT NULL COMMENT '服务ip及端口',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_sysid` (`sys_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 275 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '执行人覆盖代码行记录表';
+
+
+-- accurate_test.`group` definition
+
+CREATE TABLE `group` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '组别id',
+  `group_name` varchar(100) NOT NULL COMMENT '组别名称',
+  `group_shortForm` varchar(100) NOT NULL COMMENT '组别简称',
+  `create_time` timestamp NOT NULL COMMENT '创建时间',
+  `git_name` varchar(255) DEFAULT NULL COMMENT 'git账号',
+  `git_password` varchar(500) DEFAULT NULL COMMENT 'git密码',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 6 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '组别表（各系统所属大系统）';
+
+
+-- accurate_test.jacoco_class_cover definition
+
+CREATE TABLE `jacoco_class_cover` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名',
+  `package_id` int(11) DEFAULT NULL COMMENT '包id',
+  `class_missed` int(11) DEFAULT NULL COMMENT '类未覆盖',
+  `class_covered` int(11) DEFAULT NULL COMMENT '类覆盖',
+  `method_missed` int(11) DEFAULT NULL COMMENT '方法未覆盖',
+  `method_covered` int(11) DEFAULT NULL COMMENT '方法覆盖',
+  `line_missed` int(11) DEFAULT NULL COMMENT '行未覆盖',
+  `line_covered` int(11) DEFAULT NULL COMMENT '行覆盖',
+  `branch_missed` int(11) DEFAULT NULL COMMENT '分支未覆盖',
+  `branch_covered` int(11) DEFAULT NULL COMMENT '分支覆盖',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '主版本号',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '辅版本号',
+  `cover_logo` varchar(1) DEFAULT NULL COMMENT '覆盖标识 0：增量  1：全量',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `class_path` varchar(500) DEFAULT NULL COMMENT '类路径',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 6133490 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.jacoco_method_cover definition
+
+CREATE TABLE `jacoco_method_cover` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_name` varchar(255) DEFAULT NULL COMMENT '类名',
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `method_missed` int(11) DEFAULT NULL COMMENT '方法未覆盖',
+  `method_covered` int(11) DEFAULT NULL COMMENT '方法覆盖',
+  `line_missed` int(11) DEFAULT NULL COMMENT '行未覆盖',
+  `line_covered` int(11) DEFAULT NULL COMMENT '行覆盖',
+  `branch_missed` int(11) DEFAULT NULL COMMENT '分支未覆盖',
+  `branch_covered` int(11) DEFAULT NULL COMMENT '分支覆盖',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '主版本号',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '辅版本号',
+  `cover_logo` varchar(1) DEFAULT NULL COMMENT '覆盖标识 0：增量  1：全量',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 136251924 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.jacoco_package_cover definition
+
+CREATE TABLE `jacoco_package_cover` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `package_name` varchar(255) DEFAULT NULL COMMENT '包名',
+  `class_missed` int(11) DEFAULT NULL COMMENT '类未覆盖',
+  `class_covered` int(11) DEFAULT NULL COMMENT '类覆盖',
+  `method_missed` int(11) DEFAULT NULL COMMENT '方法未覆盖',
+  `method_covered` int(11) DEFAULT NULL COMMENT '方法覆盖',
+  `line_missed` int(11) DEFAULT NULL COMMENT '行未覆盖',
+  `line_covered` int(11) DEFAULT NULL COMMENT '行覆盖',
+  `branch_missed` int(11) DEFAULT NULL COMMENT '分支未覆盖',
+  `branch_covered` int(11) DEFAULT NULL COMMENT '分支覆盖',
+  `new_version_no` int(11) DEFAULT NULL COMMENT '主版本号',
+  `old_version_no` int(11) DEFAULT NULL COMMENT '辅版本号',
+  `cover_logo` varchar(1) DEFAULT NULL COMMENT '覆盖标识 0：增量  1：全量',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 482149 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.permission definition
+
+CREATE TABLE `permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '权限id',
+  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '权限名称',
+  `menu_name` varchar(255) NOT NULL COMMENT '枚举名称',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 4 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.`role` definition
+
+CREATE TABLE `role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色id',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL COMMENT '角色名',
+  `create_time` timestamp NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 4 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.role_permission definition
+
+CREATE TABLE `role_permission` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色权限id',
+  `role_id` int(11) NOT NULL COMMENT '角色id',
+  `permission_id` int(11) NOT NULL COMMENT '权限id',
+  `create_time` timestamp NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `role_id` (`role_id`, `permission_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 7 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.sandbox_branch_info definition
+
+CREATE TABLE `sandbox_branch_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `parent_id` int(11) DEFAULT NULL COMMENT '方法id',
+  `branch_type` varchar(100) DEFAULT NULL COMMENT '分支类型',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `branch_line` int(11) DEFAULT NULL COMMENT '分支所在行号/分支起始行',
+  `execute_num` int(11) NOT NULL DEFAULT '0' COMMENT '执行次数',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `parent_branch_line` int(11) DEFAULT NULL COMMENT '父分支所在行号',
+  `relevance_branch_line` int(11) DEFAULT NULL COMMENT '关联分支所在行号',
+  `branch_end_line` int(11) DEFAULT NULL COMMENT '分支结束行',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 259644 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '全量类分支表';
+
+
+-- accurate_test.sandbox_branch_info_copy definition
+
+CREATE TABLE `sandbox_branch_info_copy` (
+  `id` int(11) NOT NULL,
+  `parent_id` int(11) DEFAULT NULL COMMENT '方法id',
+  `branch_type` varchar(100) DEFAULT NULL COMMENT '分支类型',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `branch_line` int(11) DEFAULT NULL COMMENT '分支所在行号/分支起始行',
+  `execute_num` int(11) NOT NULL DEFAULT '0' COMMENT '执行次数',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `parent_branch_line` int(11) DEFAULT NULL COMMENT '父分支所在行号',
+  `relevance_branch_line` int(11) DEFAULT NULL COMMENT '关联分支所在行号',
+  `branch_end_line` int(11) DEFAULT NULL COMMENT '分支结束行',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '分支副本表';
+
+
+-- accurate_test.sandbox_class_info definition
+
+CREATE TABLE `sandbox_class_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名',
+  `valid_line_num` int(11) NOT NULL DEFAULT '0' COMMENT '有效代码行总数',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `methods_num` int(11) NOT NULL DEFAULT '0' COMMENT '类中方法总数',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `package_name` varchar(500) DEFAULT NULL COMMENT '包名',
+  `branch_count` int(11) DEFAULT '0' COMMENT '分支总数',
+  `entity_flag` varchar(1) NOT NULL DEFAULT '1' COMMENT '是否为实体类',
+  `execute_num` int(11) DEFAULT '0' COMMENT '执行次数',
+  `module_name` varchar(255) DEFAULT NULL COMMENT '模块名称',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_class_info` (`class_name`, `version_no`, `module_name`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_package_name` (`package_name`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 11310 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '全量类表';
+
+
+-- accurate_test.sandbox_class_info_copy definition
+
+CREATE TABLE `sandbox_class_info_copy` (
+  `id` int(11) NOT NULL,
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名',
+  `valid_line_num` int(11) NOT NULL DEFAULT '0' COMMENT '有效代码行总数',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `methods_num` int(11) NOT NULL DEFAULT '0' COMMENT '类中方法总数',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `package_name` varchar(500) DEFAULT NULL COMMENT '包名',
+  `branch_count` int(11) DEFAULT '0' COMMENT '分支总数',
+  `entity_flag` varchar(1) NOT NULL DEFAULT '1' COMMENT '是否为实体类',
+  `execute_num` int(11) DEFAULT '0' COMMENT '执行次数',
+  `module_name` varchar(255) DEFAULT NULL COMMENT '模块名称',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_package_name` (`package_name`) BLOCK_SIZE 16384 LOCAL
+) DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '类副本表';
+
+
+-- accurate_test.sandbox_cover_info definition
+
+CREATE TABLE `sandbox_cover_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `line_num` int(11) DEFAULT NULL COMMENT '行号',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_cover_info` (`class_id`, `line_num`, `version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_versionid` (`version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_line_num` (`line_num`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_class_id` (`class_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 1 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '全量覆盖代码行记录表';
+
+
+-- accurate_test.sandbox_diff_cover_info definition
+
+CREATE TABLE `sandbox_diff_cover_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `line_num` int(11) DEFAULT NULL COMMENT '代码行',
+  `version_no_new` int(11) DEFAULT NULL COMMENT '新版本',
+  `version_no_old` int(11) DEFAULT NULL COMMENT '旧版本',
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `case_uuid` varchar(100) DEFAULT NULL COMMENT '用例id',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_class_id` (`class_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_line_num` (`line_num`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_version_no_new` (`version_no_new`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_version_no_old` (`version_no_old`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 1 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '增量覆盖代码行记录表';
+
+
+-- accurate_test.sandbox_merge_cover_info definition
+
+CREATE TABLE `sandbox_merge_cover_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `line_num` int(11) DEFAULT NULL COMMENT '代码行号',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `class_name` varchar(255) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(255) DEFAULT NULL COMMENT '方法名称',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_cover_info` (`class_id`, `line_num`, `version_no`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_class_id` (`class_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_line_num` (`line_num`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 1 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '多版本覆盖率合并表';
+
+
+-- accurate_test.sandbox_method_info definition
+
+CREATE TABLE `sandbox_method_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `class_name` varchar(200) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(200) DEFAULT NULL COMMENT '方法名称',
+  `parameters` text DEFAULT NULL COMMENT '方法参数',
+  `method_sign` text DEFAULT NULL COMMENT '方法签名',
+  `start_line` int(11) DEFAULT NULL COMMENT '方法开始行',
+  `end_line` int(11) DEFAULT NULL COMMENT '方法结束行',
+  `method_md5` varchar(200) DEFAULT NULL COMMENT '方法MD5',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `execute_num` int(11) NOT NULL DEFAULT '0' COMMENT '行执行次数',
+  `version_no` int(11) DEFAULT NULL COMMENT '系统版本号',
+  `branch_count` int(11) DEFAULT '0' COMMENT '分支数',
+  `valid_line_count` int(11) DEFAULT '0' COMMENT '代码行数',
+  `module_name` varchar(255) DEFAULT NULL COMMENT '模块名称',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_class_id` (`class_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 100027 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '全量类方法表';
+
+
+-- accurate_test.sandbox_method_info_copy definition
+
+CREATE TABLE `sandbox_method_info_copy` (
+  `id` int(11) NOT NULL,
+  `class_id` int(11) DEFAULT NULL COMMENT '类id',
+  `class_name` varchar(200) DEFAULT NULL COMMENT '类名称',
+  `method_name` varchar(200) DEFAULT NULL COMMENT '方法名称',
+  `parameters` text DEFAULT NULL COMMENT '方法参数',
+  `method_sign` text DEFAULT NULL COMMENT '方法签名',
+  `start_line` int(11) DEFAULT NULL COMMENT '方法开始行',
+  `end_line` int(11) DEFAULT NULL COMMENT '方法结束行',
+  `method_md5` varchar(200) DEFAULT NULL COMMENT '方法MD5',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  `execute_num` int(11) NOT NULL DEFAULT '0' COMMENT '行执行次数',
+  `version_no` int(11) DEFAULT NULL COMMENT '系统版本号',
+  `branch_count` int(11) DEFAULT '0' COMMENT '分支数',
+  `valid_line_count` int(11) DEFAULT '0' COMMENT '代码行数',
+  `module_name` varchar(255) DEFAULT NULL COMMENT '模块名',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '方法副本表';
+
+
+-- accurate_test.sandbox_sys_cover_report definition
+
+CREATE TABLE `sandbox_sys_cover_report` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `line_covered` int(11) DEFAULT NULL COMMENT '行覆盖',
+  `line_count` int(11) DEFAULT NULL COMMENT '行总数',
+  `branch_covered` int(11) DEFAULT NULL COMMENT '分支覆盖',
+  `branch_count` int(11) DEFAULT NULL COMMENT '分支总数',
+  `method_covered` int(11) DEFAULT NULL COMMENT '方法覆盖',
+  `method_count` int(11) DEFAULT NULL COMMENT '方法总数',
+  `class_covered` int(11) DEFAULT NULL COMMENT '类覆盖',
+  `class_count` int(11) DEFAULT NULL COMMENT '类总数',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `cover_type` varchar(255) DEFAULT NULL COMMENT '汇总类型',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 28569 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '系统覆盖率汇总表';
+
+
+-- accurate_test.sandbox_sys_cover_time definition
+
+CREATE TABLE `sandbox_sys_cover_time` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `line_covered` int(11) DEFAULT NULL COMMENT '行覆盖',
+  `line_count` int(11) DEFAULT NULL COMMENT '行总数',
+  `branch_covered` int(11) DEFAULT NULL COMMENT '分支覆盖',
+  `branch_count` int(11) DEFAULT NULL COMMENT '分支总数',
+  `method_covered` int(11) DEFAULT NULL COMMENT '方法覆盖',
+  `method_count` int(11) DEFAULT NULL COMMENT '方法总数',
+  `class_covered` int(11) DEFAULT NULL COMMENT '类覆盖',
+  `class_count` int(11) DEFAULT NULL COMMENT '类总数',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `version_id` int(11) DEFAULT NULL COMMENT '新版本',
+  `old_version` int(11) DEFAULT NULL COMMENT '旧版本',
+  `cover_type` varchar(255) DEFAULT NULL COMMENT '汇总类型',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 28553 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '系统覆盖率曲线图表';
+
+
+-- accurate_test.sandbox_valid_code_lines definition
+
+CREATE TABLE `sandbox_valid_code_lines` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `method_id` int(11) DEFAULT NULL COMMENT '方法表id',
+  `line_number` int(11) DEFAULT NULL COMMENT '代码行号',
+  `execute_num` int(11) DEFAULT '0' COMMENT '执行次数',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `branch_id` int(11) DEFAULT NULL COMMENT '有效行所属分支id',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 1464503 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '方法有效代码行表';
+
+
+-- accurate_test.sandbox_valid_code_lines_copy definition
+
+CREATE TABLE `sandbox_valid_code_lines_copy` (
+  `id` int(11) NOT NULL,
+  `method_id` int(11) DEFAULT NULL COMMENT '方法表id',
+  `line_number` int(11) DEFAULT NULL COMMENT '代码行号',
+  `execute_num` int(11) DEFAULT '0' COMMENT '执行次数',
+  `version_no` int(11) DEFAULT NULL COMMENT '版本号',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `branch_id` int(11) DEFAULT NULL COMMENT '有效行所属分支id',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_version_no` (`version_no`) BLOCK_SIZE 16384 LOCAL
+) DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '方法有效代码行副本表';
+
+
+-- accurate_test.sandbox_version_cover_report definition
+
+CREATE TABLE `sandbox_version_cover_report` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `line_covered` int(11) DEFAULT NULL COMMENT '行覆盖',
+  `line_count` int(11) DEFAULT NULL COMMENT '行总数',
+  `branch_covered` int(11) DEFAULT NULL COMMENT '分支覆盖',
+  `branch_count` int(11) DEFAULT NULL COMMENT '分支总数',
+  `method_covered` int(11) DEFAULT NULL COMMENT '方法覆盖',
+  `method_count` int(11) DEFAULT NULL COMMENT '方法总数',
+  `class_covered` int(11) DEFAULT NULL COMMENT '类覆盖',
+  `class_count` int(11) DEFAULT NULL COMMENT '类总数',
+  `sys_no` int(11) DEFAULT NULL COMMENT '系统编号',
+  `version_new` int(11) DEFAULT NULL COMMENT '新版本',
+  `version_old` int(11) DEFAULT NULL COMMENT '旧版本',
+  `cover_type` varchar(255) DEFAULT NULL COMMENT '汇总类型',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 28569 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '系统下版本覆盖率表';
+
+
+-- accurate_test.sys_config definition
+
+CREATE TABLE `sys_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '子系统id',
+  `group_no` int(11) NOT NULL COMMENT '子系统所属组别，对应group表的id',
+  `sys_name` varchar(100) NOT NULL COMMENT '系统中文名',
+  `sys_shortForm` varchar(100) NOT NULL COMMENT '系统简称',
+  `sys_num` varchar(100) DEFAULT NULL COMMENT '系统编号',
+  `sys_intro` varchar(500) NOT NULL DEFAULT '项目简介' COMMENT '项目简介',
+  `arch_type` varchar(1) NOT NULL DEFAULT '0' COMMENT '项目架构类型 0:单体架构 1:微服务架构',
+  `ms_id` varchar(100) DEFAULT NULL COMMENT '微服务编号',
+  `git_url` varchar(255) NOT NULL COMMENT 'git地址',
+  `host` varchar(30) DEFAULT NULL COMMENT '服务器ip地址',
+  `port` varchar(8) DEFAULT NULL COMMENT 'jacoco代理端口',
+  `status` varchar(1) NOT NULL DEFAULT '1' COMMENT '项目状态 0:正常 1:异常',
+  `create_time` timestamp NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  `sys_env` varchar(100) NOT NULL COMMENT '系统环境',
+  `listen_flag` varchar(100) DEFAULT NULL COMMENT 'agent监听状态\r\n0 开启成功\n\n；1 开启失败；\n\n2 重复开启监听；\n\n3 关闭成功；\n\n4 关闭失败；\n\n5 没有开启的监听器',
+  `need_code` varchar(1) NOT NULL DEFAULT '0' COMMENT '是否有git库，0：需要 1：不需要',
+  `package_name` varchar(255) DEFAULT NULL COMMENT '项目包名',
+  `regular_match` varchar(500) DEFAULT NULL COMMENT '监听类匹配规则',
+  `update_userName` varchar(100) NOT NULL COMMENT '最后一次更新应用信息的人员工号',
+  `agent_type` varchar(100) NOT NULL COMMENT '监听器类型',
+  `is_more_modules` varchar(1) DEFAULT NULL COMMENT '是否为多模块项目 0 是 1 否',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 6 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '子系统表';
+
+
+-- accurate_test.sys_listen_info definition
+
+CREATE TABLE `sys_listen_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `sys_no` int(11) NOT NULL COMMENT '项目id',
+  `node_ip` varchar(30) DEFAULT NULL COMMENT '节点IP',
+  `node_port` varchar(8) DEFAULT NULL COMMENT '节点端口号',
+  `listen_flag` int(11) DEFAULT NULL COMMENT '监听状态:0 活跃 1 未开启  2 不活跃',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  `insert_time` timestamp NOT NULL COMMENT '插入时间',
+  `agent_type` varchar(100) NOT NULL COMMENT '监听状态：jacoco或Jvm-Sandbox',
+  `is_del` int(11) NOT NULL DEFAULT '0' COMMENT '删除状态：1已删除  0未删除',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `sys_listen_info_un` (`id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 7 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '项目节点监听信息表';
+
+
+-- accurate_test.sys_version definition
+
+CREATE TABLE `sys_version` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '版本id',
+  `sys_no` int(11) NOT NULL COMMENT '版本所属系统，对应system的id',
+  `version` varchar(100) NOT NULL COMMENT '版本名称',
+  `version_shortForm` varchar(100) NOT NULL COMMENT '版本编号',
+  `report_page_url` varchar(500) DEFAULT NULL COMMENT '覆盖率报告页面url',
+  `cover_rate` varchar(100) DEFAULT NULL COMMENT '用例覆盖率',
+  `branch_tag` varchar(100) DEFAULT NULL COMMENT '分支标识',
+  `status` varchar(1) NOT NULL DEFAULT '1' COMMENT '项目状态 0:有效 1:无效',
+  `insert_time` timestamp NOT NULL COMMENT '版本插入时间',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  `group_no` int(11) DEFAULT NULL COMMENT '所属组',
+  `get_code_diff` int(11) DEFAULT NULL COMMENT '获取增量代码覆盖率时所选版本',
+  `class_file_path` varchar(500) DEFAULT NULL COMMENT 'class文件地址',
+  `diff_json_path` varchar(500) DEFAULT NULL COMMENT '差异json文件地址',
+  `merge_versions` varchar(255) DEFAULT NULL COMMENT '合并版本号',
+  `exec_file_path` varchar(500) DEFAULT NULL COMMENT 'exec文件地址',
+  `last_version_flag` int(11) DEFAULT '1' COMMENT '最终版本标志：0是最终版本，1不是最终版本',
+  `pull_type` varchar(255) DEFAULT NULL COMMENT '拉取方式',
+  `java_file_path` varchar(500) DEFAULT NULL COMMENT 'java文件存放目录',
+  `diff_report_page_url` varchar(500) DEFAULT NULL COMMENT '差异报告地址',
+  `history_version` int(11) DEFAULT NULL COMMENT '历史覆盖版本号',
+  `history_report_page_url` varchar(500) DEFAULT NULL COMMENT '历史覆盖报告地址',
+  `history_exec_file_path` varchar(500) DEFAULT NULL COMMENT '历史覆盖exec存放地址',
+  `thread_end_flag` varchar(1) DEFAULT NULL COMMENT '线程是否处理完成 0：未处理完成 1：处理完成',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 160 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '系统版本表';
+
+
+-- accurate_test.user_info definition
+
+CREATE TABLE `user_info` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(500) DEFAULT NULL COMMENT '账号',
+  `password` varchar(500) DEFAULT NULL COMMENT '密码',
+  `fail_num` int(11) NOT NULL DEFAULT '0' COMMENT '失败次数',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `update_time` timestamp NULL DEFAULT NULL COMMENT '更改时间',
+  `status` int(11) NOT NULL DEFAULT '0' COMMENT '用户状态',
+  `nick_name` varchar(100) DEFAULT NULL COMMENT '昵称',
+  `phone` varchar(100) DEFAULT NULL COMMENT '手机号',
+  `email` varchar(100) DEFAULT NULL COMMENT '邮箱',
+  `download_flag` int(11) NOT NULL DEFAULT '1' COMMENT '下载插件的状态，1未下载，0已下载',
+  `project_id` int(11) DEFAULT NULL COMMENT '所属项目组',
+  PRIMARY KEY (`id`)
+) AUTO_INCREMENT = 14 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '用户表';
+
+
+-- accurate_test.user_project definition
+
+CREATE TABLE `user_project` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户项目id',
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `project_id` int(11) NOT NULL COMMENT '项目id',
+  `create_time` timestamp NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`, `project_id`) BLOCK_SIZE 16384 LOCAL,
+  UNIQUE KEY `unique_user_project` (`user_id`, `project_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 64 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.user_role definition
+
+CREATE TABLE `user_role` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户角色id',
+  `user_id` int(11) NOT NULL COMMENT '用户id',
+  `role_id` int(11) NOT NULL COMMENT '角色id',
+  `create_time` timestamp NOT NULL COMMENT '创建时间',
+  `update_time` timestamp NOT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`, `role_id`) BLOCK_SIZE 16384 LOCAL,
+  UNIQUE KEY `unique_user_role` (`user_id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 14 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0;
+
+
+-- accurate_test.version_case definition
+
+CREATE TABLE `version_case` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用例id',
+  `version_no` int(11) NOT NULL COMMENT '版本id，对应sys_version的id',
+  `case_name` varchar(100) NOT NULL COMMENT '用例名称',
+  `executor` varchar(100) DEFAULT NULL COMMENT '用例执行人',
+  `source` varchar(100) NOT NULL COMMENT '用例来源',
+  `source_id` varchar(100) DEFAULT NULL COMMENT '来源id，自动化的用例此字段不为空',
+  `first_sourceId` varchar(100) DEFAULT NULL COMMENT '用例首次出现的sourceid',
+  `start_time` timestamp NULL DEFAULT NULL COMMENT '执行开始时间',
+  `end_time` timestamp NULL DEFAULT NULL COMMENT '最后执行结束时间',
+  `insert_time` timestamp NULL DEFAULT NULL COMMENT '插入时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_customer_source_id` (`source_id`) BLOCK_SIZE 16384 LOCAL,
+  KEY `idx_customer_id` (`id`) BLOCK_SIZE 16384 LOCAL
+) AUTO_INCREMENT = 28 AUTO_INCREMENT_MODE = 'ORDER' DEFAULT CHARSET = utf8mb4 ROW_FORMAT = DYNAMIC COMPRESSION = 'zstd_1.3.8' REPLICA_NUM = 1 BLOCK_SIZE = 16384 USE_BLOOM_FILTER = FALSE TABLET_SIZE = 134217728 PCTFREE = 0 COMMENT = '用例表（版本与用例对应）';
