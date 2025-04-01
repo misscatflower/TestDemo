@@ -1,0 +1,6 @@
+groupName,groupShortform,id,num,statusCode,scenario
+"Wildlife Conservation","WLC",145,678,200,OK
+"Marine Biology","MBL",234,789,201,Created
+"Environmental Science","ESI",456,890,401,Unauthorized
+"Ecological Restoration","ERI",567,123,403,Forbidden
+"Climate Change","CCI",890,456,404,Not Found
