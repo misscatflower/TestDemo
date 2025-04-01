@@ -1,0 +1,6 @@
+address,num,password,username,statusCode,scenario
+"aute amet ut anim ipsum",200,"generatedPassword1","generatedUser1",200,"OK"
+"aute amet ut anim ipsum",201,"generatedPassword2","generatedUser2",201,"Created"
+"aute amet ut anim ipsum",401,"generatedPassword3","generatedUser3",401,"Unauthorized"
+"aute amet ut anim ipsum",403,"generatedPassword4","generatedUser4",403,"Forbidden"
+"aute amet ut anim ipsum",404,"generatedPassword5","generatedUser5",404,"Not Found"
