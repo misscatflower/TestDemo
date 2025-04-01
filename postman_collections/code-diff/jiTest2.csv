@@ -1,0 +1,5 @@
+password,userName,statusCode,scenario
+"password123","user1",200,"OK"
+"password456","user2",401,"Unauthorized"
+"password789","user3",403,"Forbidden"
+"password101","user4",404,"Not Found"

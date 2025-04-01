@@ -1,0 +1,6 @@
+address,num,password,username,statusCode,scenario
+"valid_address_1",123,"strongpassword123","user123",200,"OK"
+"valid_address_2",456,"securepassword456","user456",201,"Created"
+"invalid_address_1",789,"weakpass789","invaliduser789",401,"Unauthorized"
+"invalid_address_2",101,"shortpass101","invaliduser101",403,"Forbidden"
+"invalid_address_3",202,"badpass202","invaliduser202",404,"Not Found"
